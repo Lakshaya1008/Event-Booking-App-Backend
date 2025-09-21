@@ -1,0 +1,6 @@
+name: Event Booking App CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:

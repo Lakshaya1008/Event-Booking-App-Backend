@@ -1,0 +1,216 @@
+{
+  "info": {
+    "name": "Event Booking App API",
+    "description": "Complete API collection for Event Booking App with OAuth2 JWT authentication",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8081",
+      "type": "string"
+    },
+    {
+      "key": "keycloak_url",
+      "value": "http://localhost:9090",
+      "type": "string"
+    },
+    {
+      "key": "realm",
+      "value": "event-ticket-platform",
+      "type": "string"
+    },
+    {
+      "key": "client_id",
+      "value": "event-booking-app",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "event_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticket_type_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "ticket_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Get Access Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "value": "password"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{client_id}}"
+                },
+                {
+                  "key": "username",
+                  "value": "organizer1"
+                },
+                {
+                  "key": "password",
+                  "value": "password123"
+                },
+                {
+                  "key": "scope",
+                  "value": "openid profile email"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{keycloak_url}}/realms/{{realm}}/protocol/openid-connect/token",
+              "host": ["{{keycloak_url}}"],
+              "path": ["realms", "{{realm}}", "protocol", "openid-connect", "token"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.access_token);",
+                  "    console.log('Token set successfully');",
+                  "} else {",
+                  "    console.log('Failed to get token');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Event Management (ORGANIZER)",
+      "item": [
+        {
+          "name": "Create Event",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tech Conference 2025\",\n  \"start\": \"2025-12-15T09:00:00\",\n  \"end\": \"2025-12-15T18:00:00\",\n  \"venue\": \"Convention Center\",\n  \"salesStart\": \"2025-11-01T00:00:00\",\n  \"salesEnd\": \"2025-12-14T23:59:59\",\n  \"status\": \"PUBLISHED\",\n  \"ticketTypes\": [\n    {\n      \"name\": \"Early Bird\",\n      \"price\": 199.99,\n      \"description\": \"Discounted tickets\",\n      \"totalAvailable\": 100\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/events",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events"]
+            }
+          }
+        },
+        {
+          "name": "List My Events",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/events?page=0&size=20&sort=start,desc",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events"],
+              "query": [
+                {"key": "page", "value": "0"},
+                {"key": "size", "value": "20"},
+                {"key": "sort", "value": "start,desc"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ticket Purchase (ATTENDEE)",
+      "item": [
+        {
+          "name": "Browse Published Events",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/published-events",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "published-events"]
+            }
+          }
+        },
+        {
+          "name": "Purchase Tickets (with Quantity)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/events/{{event_id}}/ticket-types/{{ticket_type_id}}/tickets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "events", "{{event_id}}", "ticket-types", "{{ticket_type_id}}", "tickets"]
+            }
+          }
+        },
+        {
+          "name": "List My Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/tickets",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "tickets"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
+

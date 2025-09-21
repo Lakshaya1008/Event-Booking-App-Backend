@@ -1,0 +1,29 @@
+# Copy this file to application-local.properties for local development
+# DO NOT commit this file to version control
+
+spring.application.name=tickets
+
+# ===============================
+# Database Configuration (Local PostgreSQL)
+# ===============================
+spring.datasource.url=jdbc:postgresql://localhost:5432/Event_Booking_App_db
+spring.datasource.username=postgres
+spring.datasource.password=Lakshaya@1008
+
+# ===============================
+# JPA / Hibernate (Local Development)
+# ===============================
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+logging.level.com.event.tickets=DEBUG
+
+# ===============================
+# Server Configuration
+# ===============================
+server.port=8081
+
+# ===============================
+# Keycloak Configuration
+# ===============================
+spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:9090/realms/event-ticket-platform
