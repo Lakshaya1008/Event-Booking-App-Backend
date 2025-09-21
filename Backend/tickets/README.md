@@ -45,7 +45,7 @@ A comprehensive Spring Boot application for managing events, ticket sales, and a
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/event-booking-app.git
+git clone https://github.com/Lakshaya1008/Event-Booking-App-Backend.git
 cd event-booking-app/Backend/tickets
 ```
 
