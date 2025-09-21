@@ -37,6 +37,16 @@
       "type": "string"
     },
     {
+      "key": "username",
+      "value": "your_username_here",
+      "type": "string"
+    },
+    {
+      "key": "password",
+      "value": "your_password_here",
+      "type": "string"
+    },
+    {
       "key": "access_token",
       "value": "",
       "type": "string"
@@ -84,11 +94,11 @@
                 },
                 {
                   "key": "username",
-                  "value": "organizer1"
+                  "value": "{{username}}"
                 },
                 {
                   "key": "password",
-                  "value": "password123"
+                  "value": "{{password}}"
                 },
                 {
                   "key": "scope",
@@ -213,4 +223,3 @@
     }
   ]
 }
-
