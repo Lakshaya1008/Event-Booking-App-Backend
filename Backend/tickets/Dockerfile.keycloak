@@ -17,6 +17,8 @@ ENV KC_DB=h2-file
 ENV KC_DB_URL_HOST=localhost
 ENV KC_DB_URL_DATABASE=/opt/keycloak/data/h2/keycloakdb
 ENV KC_CACHE=local
+ENV KC_HTTP_HOST=0.0.0.0
+ENV KC_HTTP_PORT=8080
 
 # JVM memory optimization for Render's 512MB limit
 ENV JAVA_OPTS_APPEND="-Xms128m -Xmx384m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true"
@@ -34,4 +36,4 @@ HEALTHCHECK --interval=60s --timeout=30s --start-period=120s --retries=3 \
 
 # Build the server first, then start in development mode for Render
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-CMD ["start-dev", "--optimized"]
+CMD ["start-dev", "--http-host=0.0.0.0", "--http-port=8080"]
