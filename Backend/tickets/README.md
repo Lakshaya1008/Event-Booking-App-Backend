@@ -287,7 +287,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Lakshaya**
-- GitHub: [@your-github-username](https://github.com/your-github-username)
+- GitHub: [@Lakshaya1008](https://github.com/Lakshaya1008)
 
 ## 🙏 Acknowledgments
 
