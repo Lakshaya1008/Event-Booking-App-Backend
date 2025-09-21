@@ -1,7 +1,28 @@
 services:
+  # Spring Boot Application (uses the Dockerfile)
+  app:
+    build: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - db
+      - keycloak
+    environment:
+      - DATABASE_URL=jdbc:postgresql://db:5432/Event_Booking_App_db
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD:-changeme}
+      - KEYCLOAK_URL=http://keycloak:8080
+      - PORT=8081
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
   # Our PostgreSQL database
   db:
-    # Using the latest PostgreSQL image
     image: postgres:latest
     ports:
       - "5432:5432"
@@ -10,6 +31,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
       POSTGRES_DB: Event_Booking_App_db
       POSTGRES_USER: ${DB_USER:-postgres}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   # Database management interface
   adminer:
@@ -17,6 +40,8 @@ services:
     restart: always
     ports:
       - 8888:8080
+    depends_on:
+      - db
 
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -33,4 +58,6 @@ services:
 
 volumes:
   keycloak-data:
+    driver: local
+  postgres_data:
     driver: local
